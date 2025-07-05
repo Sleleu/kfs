@@ -1,9 +1,13 @@
 [bits 32]
 
+MAGIC_NUMBER equ 0x1BADB002
+FLAGS equ 0x0
+CHECKSUM equ -(MAGIC_NUMBER + FLAGS)
+
 section .multiboot          ; Multiboot specification
-    dd 0x1BADB002           ; Magic number '1 BAD BOOT'
-    dd 0x0                  ; Flag
-    dd -(0x1BADB002 + 0x0)  ; Checksum
+    dd MAGIC_NUMBER         ; Magic number '1 BAD BOOT'
+    dd FLAGS                ; Flag
+    dd CHECKSUM             ; Checksum
 
 section .text               ; Section for executable instructions
 global start
@@ -15,7 +19,10 @@ start:
     call kernel_main        ; Call kernel_main function
     hlt                     ; Halt the CPU
 
+
+KERNEL_STACK_SIZE equ 8192
+
 section .bss                ; 'Block Started by Symbol' memory section to declare variable not initialised
-resb 8192                   ; 8KB for stack
+resb KERNEL_STACK_SIZE      ; 8KB for stack
 
 stack_space:
