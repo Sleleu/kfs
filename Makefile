@@ -2,7 +2,7 @@ CP = cp
 RM = rm
 MKDIR = mkdir -pv
 
-NAME = kernel
+NAME = kfs
 CFG = grub.cfg
 ISO_PATH = iso
 BOOT_PATH = $(ISO_PATH)/boot
@@ -11,15 +11,27 @@ GRUB_PATH = $(BOOT_PATH)/grub
 CC = cc
 CFLAGS = -m32 -Wall -Wextra -Werror -fno-builtin -fno-exceptions -fno-stack-protector -nostdlib -nodefaultlibs
 
-OBJS = boot.o kernel.o
+# sources .c
+C_SOURCES =	kernel/kernel.c			\
+			kernel/io/io.c 			\
+			kernel/kfslib/strlen.c
+
+# sources .asm
+ASM_SOURCES = boot.asm # kernel/io/io.asm
+
+
+# objects
+C_OBJS = $(C_SOURCES:.c=.o)
+ASM_OBJS = $(ASM_SOURCES:.asm=.o)
+OBJS = $(ASM_OBJS) $(C_OBJS)
 
 all: kfs.iso
 
-# Compilation
-boot.o: boot.asm
+# compilation
+%.o: %.asm
 	nasm -f elf32 $< -o $@
 
-kernel.o: kernel.c
+%.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(NAME): linker.ld $(OBJS)
@@ -33,14 +45,16 @@ kfs.iso: $(NAME) $(CFG)
 	grub-mkrescue -o $(NAME).iso $(ISO_PATH)
 
 clean:
-	$(RM) -f *.o
+	$(RM) -rf $(OBJS) iso/ kfs
 
 fclean: clean
 	$(RM) -rf $(NAME) *iso
 
 re: fclean all
 
-reload: re
-	qemu-system-i386 -cdrom kernel.iso
+start:
+	qemu-system-i386 -cdrom $(NAME).iso
 
-.PHONY: clean fclean re all
+restart: re start
+
+.PHONY: clean fclean re all start restart
