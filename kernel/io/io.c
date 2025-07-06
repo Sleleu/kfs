@@ -116,3 +116,18 @@ void terminal_putheader(void) {
         }
     }
 }
+
+#define FB_CMD_PORT     0x3D4
+#define FB_DATA_PORT    0x3D5
+
+#define CURSOR_HIGH_BYTE_CMD    0xE
+#define CURSOR_LOW_BYTE_CMD     0xF
+
+void move_cursor(size_t x, size_t y) {
+    uint16_t pos = (y * VGA_WIDTH) + x;
+    outb(FB_CMD_PORT, CURSOR_HIGH_BYTE_CMD);
+    outb(FB_DATA_PORT, ((pos >> 8) & 0x00FF));
+
+    outb(FB_CMD_PORT, CURSOR_LOW_BYTE_CMD);
+    outb(FB_DATA_PORT, pos & 0x00FF);
+}

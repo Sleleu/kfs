@@ -17,7 +17,8 @@ C_SOURCES =	kernel/kernel.c			\
 			kernel/kfslib/strlen.c
 
 # sources .asm
-ASM_SOURCES = boot.asm # kernel/io/io.asm
+ASM_SOURCES =	boot.asm 			\
+				kernel/io/outb.asm
 
 
 # objects
