@@ -16,4 +16,9 @@ void move_cursor(size_t x, size_t y);
 /* outb.asm */
 void outb(uint16_t port, uint8_t data);
 
+/* inb.asm */
+uint8_t inb(uint16_t port);
+
+void printk(const char *format, ...);
+
 #endif

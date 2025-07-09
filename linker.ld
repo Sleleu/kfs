@@ -6,6 +6,13 @@ ENTRY(start)
    kernel image. */
 SECTIONS
 {
+
+	. = 0x800;
+	.gdt ALIGN(8) :
+	{
+		*(.gdt)
+	}
+
 	/* It used to be universally recommended to use 1M as a start offset,
 	   as it was effectively guaranteed to be available under BIOS systems.
 	   However, UEFI has made things more complicated, and experimental data
