@@ -10,12 +10,15 @@ section .multiboot          ; Multiboot specification
     dd CHECKSUM             ; Checksum
 
 section .text               ; Section for executable instructions
+
 global start
 extern kernel_main          ; kernel_main function defined in C file
+extern gdt_init             ; function defined in gdt.asm
 
 start:
     cli                     ; Block interrupts, clear the IF flag in the EFLAGS register
     mov esp, stack_space    ; Set stack pointer, moves the empty stack_space function into de Stack Pointer
+    call gdt_init           ; install GDT, enter in protected mode
     call kernel_main        ; Call kernel_main function
     hlt                     ; Halt the CPU
 

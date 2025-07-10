@@ -19,7 +19,7 @@ gdt_flush:
     mov fs, ax
     mov gs, ax
     mov ss, ax
-    sti                ; start interruptions
+    ; sti                ; start interruptions -> remove from now
 
     ret
 
@@ -45,7 +45,8 @@ section .gdt
 GDT_start:
 
     null_segment:       ; GDTR offset + 0x00
-        dq 0            ; all 0 | 64 bits
+        dd 0
+        dd 0            ; all 0 | 64 bits
 
     kernel_code:        ; GDTR offset + 0x08
         dw 0xFFFF       ; limit low                                                         | 16 bits
