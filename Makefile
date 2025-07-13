@@ -15,13 +15,16 @@ CFLAGS = -m32 -Wall -Wextra -Werror --freestanding -fno-builtin -fno-exceptions 
 C_SOURCES =	kernel/kernel.c			\
 			kernel/io/io.c 			\
 			kernel/kfslib/strlen.c	\
-			kernel/kfslib/printk.c
+			kernel/kfslib/printk.c	\
+			kernel/kfslib/memset.c	\
+			kernel/idt/idt.c
 
 # sources .asm
 ASM_SOURCES =	boot.asm 			\
 				kernel/io/outb.asm	\
 				kernel/io/inb.asm	\
-				kernel/gdt/gdt.asm
+				kernel/gdt/gdt.asm	\
+				kernel/idt/idt_init.asm
 
 
 # objects

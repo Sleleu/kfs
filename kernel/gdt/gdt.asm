@@ -3,7 +3,6 @@
 global gdt_init
 
 gdt_init:
-    cli                     ; cancel CPU interrupts
     lgdt [GDT_descriptor]   ; special instruction, declare my gdt
 
     ; Enable the Protection Enable (PE) bit in Control Register 0 (CR0)

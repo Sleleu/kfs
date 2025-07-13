@@ -1,9 +1,8 @@
 #include "include/io.h"
 #include "include/kfslib.h"
+#include "include/idt.h"
 
 void kernel_main(void) {
-
-	// gdt_install();
 
 	terminal_initialize();
 

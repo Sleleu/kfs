@@ -9,4 +9,7 @@ size_t strlen(const char* str);
 /* printk.c */
 void printk(const char *format, ...);
 
+/* memset.c */
+void*   memset(void *b, size_t c, size_t len);
+
 #endif
