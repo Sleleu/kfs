@@ -101,5 +101,5 @@ GDT_end:
 ; ===== GDT descriptor (GDTR) =====
 
 GDT_descriptor:
-    dw GDT_end - GDT_start - 1  ; size of GDT table     | 16 bits -> should be (8 bytes * 7) - 1 = 55, 0x37
+    dw GDT_end - GDT_start - 1  ; maximal offset        | 16 bits -> should be GDT_SIZE - 1 = 55, 0x37
     dd GDT_start                ; beginning of the GDT  | 32 bits

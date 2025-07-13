@@ -1,5 +1,5 @@
-#include "../include/io.h"
-#include "../include/kfslib.h"
+#include <io.h>
+#include <kfslib.h>
 
 /* VARIABLES */
 size_t terminal_row;

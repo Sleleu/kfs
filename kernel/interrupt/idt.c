@@ -1,6 +1,6 @@
-#include "../include/kfsdef.h"
-#include "../include/kfslib.h"
-#include "../include/interrupt.h"
+#include <kfsdef.h>
+#include <kfslib.h>
+#include <interrupt.h>
 
 /* Declare an IDT of 256 entries and IDT pointer*/
 struct idt_entry idt[256];

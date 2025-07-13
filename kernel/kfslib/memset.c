@@ -1,4 +1,4 @@
-#include "../include/kfsdef.h"
+#include <kfsdef.h>
 
 void*   memset(void *b, size_t c, size_t len)
 {

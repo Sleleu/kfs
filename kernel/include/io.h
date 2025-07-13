@@ -1,5 +1,5 @@
-#ifndef IO_H
-#define IO_H
+#ifndef KERNEL_INCLUDE_IO_H
+#define KERNEL_INCLUDE_IO_H
 
 #include "kfsdef.h"
 

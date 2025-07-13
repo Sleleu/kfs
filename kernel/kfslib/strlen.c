@@ -1,4 +1,4 @@
-#include "../include/kfsdef.h"
+#include <kfsdef.h>
 
 size_t strlen(const char* str) 
 {

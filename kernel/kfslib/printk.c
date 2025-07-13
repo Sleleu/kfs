@@ -1,17 +1,14 @@
-#include "../include/kfsdef.h"
-#include "../include/io.h"
-//#include <stdarg.h>
-
-typedef char *va_list;
-#define va_start(ap,parmn) (void)((ap) = (char*)(&(parmn) + 1))
-#define va_end(ap) (void)((ap) = 0)
-#define va_arg(ap, type) (((type*)((ap) = ((ap) + sizeof(type))))[-1])
+#include <kfsdef.h>
+#include <io.h>
+#include <stdarg.h>
 
 void	putstr(const char *s) {
 	int	i = 0;
 
-	if (!s)
+	if (!s) {
 		putstr("(null)");
+		return ;
+	}
 	while (s[i]) {
 		terminal_putchar(s[i]);
 		i++;
@@ -33,7 +30,7 @@ static void	putnbr(int n) {
     terminal_putchar(c);
 }
 
-static void	putchar(char c)
+void	putchar(const char c)
 {
     terminal_putchar(c);
 }
@@ -69,36 +66,38 @@ static void	putaddr(unsigned long nb) {
 	char	*index;
 
 	index = "0123456789abcdef";
-	if (nb == 0)
+	if (nb == 0) {
 		putstr("(nil)");
+		return ;
+	}
 	if (nb > 15)
 		putaddr(nb / 16);
 	nb = nb % 16;
 	putchar(index[nb]);
 }
 
-static void	print_format(const char *format, va_list args) {
+static void	print_format(const char *format, va_list *args) {
 	unsigned long	p;
 
 	if (*format == 'd' || *format == 'i')
-		putnbr(va_arg(args, int));
+		putnbr(va_arg(*args, int));
 	else if (*format == 'u')
-		putuint(va_arg(args, unsigned int));
+		putuint(va_arg(*args, unsigned int));
 	else if (*format == 'x' || *format == 'X')
-		puthex(va_arg(args, unsigned int), *format);
+		puthex(va_arg(*args, unsigned int), *format);
 	else if (*format == 'p')
 	{
-		p = va_arg(args, unsigned long);
+		p = va_arg(*args, unsigned long);
 		if (p != 0)
 			putstr("0x");
 		putaddr(p);
 	}
 	else if (*format == 'c')
-		putchar(va_arg(args, int));
+		putchar(va_arg(*args, int));
 	else if (*format == '%')
 		putchar('%');
 	else if (*format == 's')
-		putstr(va_arg(args, char *));
+		putstr(va_arg(*args, char *));
 }
 
 void printk(const char *format, ...) {
@@ -109,7 +108,7 @@ void printk(const char *format, ...) {
 		return;
 	for (size_t i = 0; format[i]; i++) {
 		if (format[i] == '%') {
-            print_format(format + ++i, args);
+            print_format(&format[++i], &args);
         }
 		else {
 			putchar(format[i]);

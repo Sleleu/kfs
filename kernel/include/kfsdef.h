@@ -1,15 +1,23 @@
-#ifndef KFSDEF_H
-#define KFSDEF_H
+#ifndef KERNEL_INCLUDE_KFSDEF_H
+#define KERNEL_INCLUDE_KFSDEF_H
 
 #define VGA_MEMORY 0xB8000   /* video memory begins here. */
 #define VGA_WIDTH 80
 #define VGA_HEIGHT 25
+#define GDT_SIZE  56
 
 /* TYPEDEF */
 typedef unsigned char uint8_t;
+typedef unsigned char u8_t;
+
 typedef unsigned short uint16_t;
+typedef unsigned short u16_t;
+
 typedef unsigned int uint32_t;
+typedef unsigned int u32_t;
+
 typedef unsigned long size_t;
+typedef unsigned long ptr_t;
 
 /* Hardware text mode color constants. */
 enum vga_color {

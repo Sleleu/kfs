@@ -1,6 +1,6 @@
-#include "../include/kfsdef.h"
-#include "../include/interrupt.h"
-#include "../include/io.h"
+#include <kfsdef.h>
+#include <interrupt.h>
+#include <io.h>
 
 /* flags -> 8 bits for P, DPL, R, GT */
 #define INTR_GATE_32B_KERNEL    0x8E  // 10001110
