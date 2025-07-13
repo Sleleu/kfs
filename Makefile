@@ -9,7 +9,7 @@ BOOT_PATH = $(ISO_PATH)/boot
 GRUB_PATH = $(BOOT_PATH)/grub
 
 CC = cc
-CFLAGS = -m32 -Wall -Wextra  --freestanding -fno-builtin -fno-exceptions -fno-stack-protector -nostdlib -nodefaultlibs
+CFLAGS = -m32 -Wall -Wextra -Werror --freestanding -fno-builtin -fno-exceptions -fno-stack-protector -nostdlib -nodefaultlibs
 
 # sources .c
 C_SOURCES =	kernel/kernel.c			\
