@@ -1,6 +1,5 @@
 #include "include/io.h"
 #include "include/kfslib.h"
-#include "include/idt.h"
 
 void kernel_main(void) {
 
@@ -23,5 +22,9 @@ void kernel_main(void) {
 		}
 		printk("%X ", *(addr + i));
 	}
+
+	// uncomment to try division by zero
+	//printk("\nTry interrupt:\n");
+	//printk("\nResult: %d", 5 / 0);
 
 }

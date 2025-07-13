@@ -9,7 +9,7 @@ BOOT_PATH = $(ISO_PATH)/boot
 GRUB_PATH = $(BOOT_PATH)/grub
 
 CC = cc
-CFLAGS = -m32 -Wall -Wextra -Werror --freestanding -fno-builtin -fno-exceptions -fno-stack-protector -nostdlib -nodefaultlibs
+CFLAGS = -m32 -Wall -Wextra  --freestanding -fno-builtin -fno-exceptions -fno-stack-protector -nostdlib -nodefaultlibs
 
 # sources .c
 C_SOURCES =	kernel/kernel.c			\
@@ -17,14 +17,17 @@ C_SOURCES =	kernel/kernel.c			\
 			kernel/kfslib/strlen.c	\
 			kernel/kfslib/printk.c	\
 			kernel/kfslib/memset.c	\
-			kernel/idt/idt.c
+			kernel/interrupt/idt.c	\
+			kernel/interrupt/isrs.c
+
 
 # sources .asm
-ASM_SOURCES =	boot.asm 			\
-				kernel/io/outb.asm	\
-				kernel/io/inb.asm	\
-				kernel/gdt/gdt.asm	\
-				kernel/idt/idt_init.asm
+ASM_SOURCES =	boot.asm 						\
+				kernel/io/outb.asm				\
+				kernel/io/inb.asm				\
+				kernel/gdt/gdt.asm				\
+				kernel/interrupt/idt_init.asm	\
+				kernel/interrupt/isr.asm
 
 
 # objects

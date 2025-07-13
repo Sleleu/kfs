@@ -3,6 +3,7 @@
 global gdt_init
 
 gdt_init:
+    cli
     lgdt [GDT_descriptor]   ; special instruction, declare my gdt
 
     ; Enable the Protection Enable (PE) bit in Control Register 0 (CR0)
@@ -18,7 +19,6 @@ gdt_flush:
     mov fs, ax
     mov gs, ax
     mov ss, ax
-    ; sti                ; start interruptions -> remove from now
 
     ret
 

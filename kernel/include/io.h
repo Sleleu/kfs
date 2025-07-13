@@ -19,6 +19,8 @@ void outb(uint16_t port, uint8_t data);
 /* inb.asm */
 uint8_t inb(uint16_t port);
 
+/* printk.c */
 void printk(const char *format, ...);
+void putstr(const char *s);
 
 #endif

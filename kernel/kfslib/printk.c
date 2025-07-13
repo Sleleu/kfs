@@ -1,8 +1,13 @@
 #include "../include/kfsdef.h"
 #include "../include/io.h"
-#include <stdarg.h>
+//#include <stdarg.h>
 
-static void	putstr(char *s) {
+typedef char *va_list;
+#define va_start(ap,parmn) (void)((ap) = (char*)(&(parmn) + 1))
+#define va_end(ap) (void)((ap) = 0)
+#define va_arg(ap, type) (((type*)((ap) = ((ap) + sizeof(type))))[-1])
+
+void	putstr(const char *s) {
 	int	i = 0;
 
 	if (!s)
@@ -33,7 +38,7 @@ static void	putchar(char c)
     terminal_putchar(c);
 }
 
-static void	putuint(unsigned int nb) {
+static void	putuint(uint32_t nb) {
 	char	c;
 
 	if (nb > 9)
@@ -43,7 +48,7 @@ static void	putuint(unsigned int nb) {
     terminal_putchar(c);
 }
 
-static void	puthex(unsigned int nb, char c) {
+static void	puthex(uint32_t nb, char c) {
 	char	*index_1;
 	char	*index_2;
 
