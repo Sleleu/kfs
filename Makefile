@@ -23,7 +23,8 @@ C_SOURCES =	kernel/kernel.c			\
 			kernel/kfslib/memset.c	\
 			kernel/kfslib/hexdump.c	\
 			kernel/interrupt/idt.c	\
-			kernel/timer/timer.c
+			kernel/timer/timer.c	\
+			kernel/keyboard/keyboard.c
 
 
 # sources .asm

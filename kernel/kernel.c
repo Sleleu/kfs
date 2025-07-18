@@ -2,6 +2,7 @@
 #include <kfslib.h>
 #include <interrupt.h>
 #include <timer.h>
+#include <keyboard.h>
 
 void print_requirements(void) {
     terminal_setcolor(VGA_L_CYAN);
@@ -25,6 +26,7 @@ void kernel_main(void) {
 
 	idt_install();
 	init_timer();
+	init_keyboard();
 
 	terminal_initialize();
     /* Print header */

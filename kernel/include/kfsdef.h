@@ -42,4 +42,11 @@ enum vga_color {
 	VGA_WHITE = 15,
 };
 
+
+/* implicit kfsbool */
+typedef _Bool bool;	//
+#define true 1		//
+#define false 0		//
+/* ---------------- */
+
 #endif
