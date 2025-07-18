@@ -1,5 +1,7 @@
-# ifndef KERNEL_INCLUDE_INTERRUPT_H
-# define KERNEL_INCLUDE_INTERRUPT_H
+#ifndef KERNEL_INCLUDE_INTERRUPT_H
+#define KERNEL_INCLUDE_INTERRUPT_H
+
+#include <kfsdef.h>
 
 /* --------------------------- DEFINES ---------------------------- */
 /* flags -> 8 bits for P, DPL, R, GT */
@@ -60,6 +62,8 @@ struct interrupt_registers
 
 /* idt.c */
 void idt_install(void);
+void irq_install_handler(int irq, void (*handler)(struct interrupt_registers *regs));
+void irq_uninstall_handler(int irq);
 
 /* idt_init.asm */
 extern void idt_flush(uint32_t);
@@ -116,4 +120,4 @@ extern void irq15(void);
 
 /* ---------------------------------------------------------------- */
 
-# endif
+#endif

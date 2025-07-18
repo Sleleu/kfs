@@ -51,11 +51,11 @@ GDT_start:
         db 11001111b    ; flag + limit = 0xCF
         db 00000000b
 
-    kernel_stack:       ; GDTR offser + 0x18
+    kernel_stack:       ; GDTR offset + 0x18
         dw 0xFFFF
         dw 0x0000
         db 0x00
-        db 10010010b    ; same as kernel data
+        db 10010110b    ; expand down (DC = 1)
         db 11001111b    ; same as kernel data
         db 0x00
 
@@ -79,7 +79,7 @@ GDT_start:
         dw 0xFFFF
         dw 0x0000
         db 0x00
-        db 11110010b        ; same as user_data
+        db 11110110b        ; expand down
         db 11001111b        ; same as user data
         db 0x00
 

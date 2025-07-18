@@ -19,6 +19,9 @@ typedef unsigned int u32_t;
 typedef unsigned long size_t;
 typedef unsigned long ptr_t;
 
+typedef unsigned long long uint64_t;
+typedef unsigned long long u64_t;
+
 /* Hardware text mode color constants. */
 enum vga_color {
 	VGA_BLACK = 0,

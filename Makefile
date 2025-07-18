@@ -10,7 +10,7 @@ GRUB_PATH = $(BOOT_PATH)/grub
 INC_PATH = ./kernel/include
 
 CC = cc
-CFLAGS =	-m32 -Wall -Wextra -Werror \
+CFLAGS =	-m32 -Wall -Wextra  \
 			--freestanding -fno-builtin -fno-exceptions \
 			-fno-stack-protector -nostdlib -nodefaultlibs \
 			-I$(INC_PATH)
@@ -22,7 +22,8 @@ C_SOURCES =	kernel/kernel.c			\
 			kernel/kfslib/printk.c	\
 			kernel/kfslib/memset.c	\
 			kernel/kfslib/hexdump.c	\
-			kernel/interrupt/idt.c
+			kernel/interrupt/idt.c	\
+			kernel/timer/timer.c
 
 
 # sources .asm

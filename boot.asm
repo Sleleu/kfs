@@ -21,7 +21,6 @@ section .multiboot          ; Multiboot specification
 
 
 ; ===== Text section =====
-
 section .text               ; Section for executable instructions
 
 start:
@@ -29,9 +28,12 @@ start:
     mov esp, stack_space    ; Set stack pointer, moves the empty stack_space function into de Stack Pointer
     call gdt_init           ; install GDT, enter in protected mode
     call kernel_main        ; Call kernel_main function
-    hlt                     ; Halt the CPU
 
+.kernel_loop:
+    hlt
+    jmp .kernel_loop
 
 section .bss                ; 'Block Started by Symbol' memory section to declare variable not initialised
-stack_space:
+
 resb KERNEL_STACK_SIZE      ; 8KB for stack
+stack_space:

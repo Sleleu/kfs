@@ -1,6 +1,7 @@
 #include <io.h>
 #include <kfslib.h>
 #include <interrupt.h>
+#include <timer.h>
 
 void print_requirements(void) {
     terminal_setcolor(VGA_L_CYAN);
@@ -23,6 +24,7 @@ void print_requirements(void) {
 void kernel_main(void) {
 
 	idt_install();
+	init_timer();
 
 	terminal_initialize();
     /* Print header */
@@ -31,8 +33,8 @@ void kernel_main(void) {
 	print_requirements();
 
 	// uncomment to try division by zero
-	// printk("\nTry interrupt:\n");
-	// printk("\nResult: %d", 5 / 0);
+	//printk("\nTry interrupt:\n");
+	//printk("\nResult: %d", 5 / 0);
 
 
 
