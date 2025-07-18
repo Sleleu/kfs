@@ -1,6 +1,29 @@
 # ifndef KERNEL_INCLUDE_INTERRUPT_H
 # define KERNEL_INCLUDE_INTERRUPT_H
 
+/* --------------------------- DEFINES ---------------------------- */
+/* flags -> 8 bits for P, DPL, R, GT */
+#define INTR_GATE_32B_KERNEL    0x8E  // 10001110
+#define TRAP_GATE_32B_KERNEL    0x8F  // 10001111
+#define INTR_GATE_32B_USER      0xEE  // 11101110
+#define TRAP_GATE_32B_USER      0xEF  // 11101111
+
+/* segment selector -> 16 bits */
+#define SEG_KERNEL_CODE         0x08
+#define SEG_KERNEL_DATA         0x10
+
+/* PIC */
+#define PIC1                    0x20
+#define PIC2                    0xA0
+
+#define PIC1_CMD_PORT           PIC1
+#define PIC1_DATA_PORT          0x21
+#define PIC2_CMD_PORT           PIC2
+#define PIC2_DATA_PORT          0xA1
+
+/* ---------------------------------------------------------------- */
+
+
 /* -------------------------- STRUCTURES -------------------------- */
 
 /* Defines an IDT entry */
@@ -21,31 +44,26 @@ struct idt_ptr
 } __attribute__((packed));
 
 /* This defines what the stack looks like after an ISR was running */
-struct regs
+struct interrupt_registers
 {
-    uint32_t gs, fs, es, ds;                            /* pushed the segs last */
+    uint32_t cr2;                                       /* control register */
+    uint32_t ds;                                        /* data segment register */
     uint32_t edi, esi, ebp, esp, ebx, edx, ecx, eax;    /* pushed by 'pusha' */
-    uint32_t int_no, err_code;                          /* 'push byte #' and ecodes do this */
+    uint32_t int_no, err_code;                          /* 'push byte #' and err codes do this */
     uint32_t eip, cs, eflags, useresp, ss;              /* pushed by the processor automatically */ 
 };
 
 /* ---------------------------------------------------------------- */
 
 
-
 /* ------------------------- DECLARATIONS ------------------------- */
 
 /* idt.c */
 void idt_install(void);
-void idt_set_gate(uint8_t num, uint32_t base, uint16_t seg_selector, uint8_t flags);
-
-/* isrs.c */
-void isrs_install(void);
 
 /* idt_init.asm */
-extern void idt_init();
+extern void idt_flush(uint32_t);
 
-/* isr.asm */
 extern void isr0(void);
 extern void isr1(void);
 extern void isr2(void);
@@ -78,6 +96,23 @@ extern void isr28(void);
 extern void isr29(void);
 extern void isr30(void);
 extern void isr31(void);
+
+extern void irq0(void);
+extern void irq1(void);
+extern void irq2(void);
+extern void irq3(void);
+extern void irq4(void);
+extern void irq5(void);
+extern void irq6(void);
+extern void irq7(void);
+extern void irq8(void);
+extern void irq9(void);
+extern void irq10(void);
+extern void irq11(void);
+extern void irq12(void);
+extern void irq13(void);
+extern void irq14(void);
+extern void irq15(void);
 
 /* ---------------------------------------------------------------- */
 

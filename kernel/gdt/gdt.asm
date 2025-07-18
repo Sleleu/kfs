@@ -1,6 +1,7 @@
-[bits 32]
-
 global gdt_init
+
+KERNEL_CODE_SEG equ kernel_code - GDT_start
+KERNEL_DATA_SEG equ kernel_data - GDT_start
 
 gdt_init:
     cli
@@ -10,10 +11,13 @@ gdt_init:
     mov eax, cr0
     or eax, 1       ; PE = 1
     mov cr0, eax
-    jmp   0x08:gdt_flush ; far jump
+    jmp   KERNEL_CODE_SEG:gdt_flush ; far jump
+
+
+[bits 32] ; start protected mode
 
 gdt_flush:
-    mov ax, 0x10        ; 0x10 is the offset in the GDT to our data segment
+    mov ax, KERNEL_DATA_SEG  ; 0x10 is the offset in the GDT to our data segment
     mov ds, ax
     mov es, ax
     mov fs, ax
@@ -22,22 +26,6 @@ gdt_flush:
 
     ret
 
-
-; ===== GDT TABLE ===== ;
-
-    ; TO REMEMBER - ACCESS BYTE
-        ;   Access byte, 8 bits which represent : 
-        ;   Present bit (P) -> always set to 1
-        ;   Descriptor privilege level field (DPL) -> 0 = highest privileges to 3 = lower, 4 values possibles so 2 bits needed
-        ;   Descriptor type bit (S) -> 0 = system segment, 1 = code or data segment
-        ;   Executable bit (E) -> 0 = data segment, 1 = code segment which can be executed
-        ;   Direction bit/conforming bit (DC) ->  for code, 0 = code can be exec from ring set in DPL, 1 = can be exec from equal or lower priv
-        ;   Readable bit / writable bite (RW) -> for code, 0 = read not allowed, 1 = read allowed
-        ;   Accessed bit -> better set to 1
-    ; TO REMEMBER - Granularity + limit high
-        ; limit + flag:
-        ; limit is 1111
-        ; flag -> granularity, set to 1 | size flag 1 = 32 bits, 0 = 16 bits | long mode (64bits) yes = 1, no = 0 | reserved always 0
 
 section .gdt
 

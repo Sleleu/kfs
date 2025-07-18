@@ -1,5 +1,3 @@
-[bits 32]
-
 global outb
 
 ; outb(uint16_t port, uint8_t data)

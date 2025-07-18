@@ -1,5 +1,6 @@
 #include <io.h>
 #include <kfslib.h>
+#include <interrupt.h>
 
 void print_requirements(void) {
     terminal_setcolor(VGA_L_CYAN);
@@ -21,11 +22,12 @@ void print_requirements(void) {
 
 void kernel_main(void) {
 
+	idt_install();
+
 	terminal_initialize();
-
     /* Print header */
-    terminal_putheader();
 
+	terminal_putheader();
 	print_requirements();
 
 	// uncomment to try division by zero

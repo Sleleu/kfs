@@ -22,8 +22,7 @@ C_SOURCES =	kernel/kernel.c			\
 			kernel/kfslib/printk.c	\
 			kernel/kfslib/memset.c	\
 			kernel/kfslib/hexdump.c	\
-			kernel/interrupt/idt.c	\
-			kernel/interrupt/isrs.c
+			kernel/interrupt/idt.c
 
 
 # sources .asm
@@ -31,8 +30,7 @@ ASM_SOURCES =	boot.asm 						\
 				kernel/io/outb.asm				\
 				kernel/io/inb.asm				\
 				kernel/gdt/gdt.asm				\
-				kernel/interrupt/idt_init.asm	\
-				kernel/interrupt/isr.asm
+				kernel/interrupt/idt_init.asm
 
 
 # objects
