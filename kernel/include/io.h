@@ -3,6 +3,8 @@
 
 #include "kfsdef.h"
 
+#define TAB_SIZE 4
+
 /* io.c */
 void terminal_initialize(void);
 void terminal_setcolor(uint8_t color);

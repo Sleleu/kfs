@@ -83,19 +83,35 @@ void backspace_align(void) {
     terminal_column++;
 }
 
+void handle_backspace(void) {
+    if (terminal_column == 0 && terminal_row != 0) {
+        terminal_row--;
+        terminal_column = VGA_WIDTH;
+        backspace_align();
+    }
+    if (terminal_column != 0 && terminal_row >= 0) { // cursor can't go outside screen
+        terminal_column--;
+        terminal_putentryat(' ', terminal_color, terminal_column, terminal_row);
+    }
+}
+
+void handle_tabulation(void) {
+    for (size_t i = 0; i < TAB_SIZE; i++) {
+        terminal_putentryat(' ', terminal_color, terminal_column, terminal_row);
+        terminal_column++;
+    }
+}
+
 void terminal_putchar(char c) {
     switch (c) {
-        case '\n':      // Handle newline
+        case '\n':
             terminal_putnewline();
         break;
-        case '\b':      // Handle backspace
-            if (terminal_column == 0 && terminal_row != 0) { // TODO: fix cursor with backspace empty screen
-                terminal_row--;
-                terminal_column = VGA_WIDTH;
-                backspace_align();
-            }
-            terminal_column--;
-            terminal_putentryat(' ', terminal_color, terminal_column, terminal_row);
+        case '\b':
+            handle_backspace();
+            break;
+        case '\t':
+            handle_tabulation();
             break;
         default:        // Default character
             terminal_putentryat(c, terminal_color, terminal_column, terminal_row);
