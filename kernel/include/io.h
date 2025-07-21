@@ -14,6 +14,8 @@ void terminal_write(const char* data, size_t size);
 void terminal_writestring(const char* data);
 void terminal_putheader(void);
 void move_cursor(size_t x, size_t y);
+void cursor_left(void);
+void cursor_right(void);
 
 /* outb.asm */
 void outb(uint16_t port, uint8_t data);

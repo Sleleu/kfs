@@ -1,6 +1,7 @@
 #include <interrupt.h>
 #include <keyboard.h>
 #include <kfslib.h>
+#include <io.h>
 
 keyboard_state kb_state;
 
@@ -9,6 +10,9 @@ keyboard_state kb_state;
 #define KEY_ALT         56
 #define KEY_CAPS_LOCK   58
 #define KEY_SPEC_RIGHT  96 // used with right CTRL and right ALT
+
+#define KEY_LEFT_ARROW  75
+#define KEY_RIGHT_ARROW 77
 
 const uint32_t lowercase[128] = {
     0,  27, '1', '2', '3', '4', '5', '6', '7', '8',	/* 9 */
@@ -91,8 +95,8 @@ const uint32_t uppercase[128] = {
 
 void keyboard_handler(struct interrupt_registers *regs) {
     (void) regs;
-    char scancode = inb(0x60) & 0x7F; // what key is pressed
-    char press = inb(0x60) & 0x80; // press down or released
+    unsigned char scancode = inb(0x60) & 0x7F; // what key is pressed
+    unsigned char press = inb(0x60) & 0x80; // press down or released
 
     //printk("scan code %d, press %d\n", scancode, press);
 
@@ -115,11 +119,25 @@ void keyboard_handler(struct interrupt_registers *regs) {
             else
                 kb_state.ctrl_press = false;
             break;
+        case KEY_SPEC_RIGHT:
+            if (press == 0)
+                kb_state.special_right = true;
+            else
+                kb_state.special_right = false;
+            break;
         case KEY_CAPS_LOCK:
             if (!kb_state.caps_lock && press == 0)
                 kb_state.caps_lock = true;
             else if (kb_state.caps_lock && press == 0)
                 kb_state.caps_lock = false;
+            break;
+        case KEY_LEFT_ARROW:
+            if (kb_state.special_right && press == 0)
+              cursor_left();
+            break;
+        case KEY_RIGHT_ARROW:
+            if (kb_state.special_right && press == 0)
+              cursor_right();
             break;
         default:
             if (press == 0) {

@@ -25,14 +25,15 @@ void print_requirements(void) {
 void kernel_main(void) {
 
 	idt_install();
-	init_timer();
-	init_keyboard();
 
 	terminal_initialize();
     /* Print header */
 
 	terminal_putheader();
 	print_requirements();
+
+	init_timer();
+	init_keyboard();
 
 	// uncomment to try division by zero
 	//printk("\nTry interrupt:\n");

@@ -1,5 +1,6 @@
 #include <io.h>
 #include <kfslib.h>
+#include <shell.h>
 
 /* VARIABLES */
 size_t terminal_row;
@@ -7,6 +8,7 @@ size_t terminal_column;
 uint8_t terminal_color;
 uint16_t* terminal_buffer = (uint16_t*)VGA_MEMORY;
 unsigned int vga_index;
+char line_buffer[VGA_WIDTH];
 
 
 static inline uint8_t vga_entry_color(enum vga_color fg, enum vga_color bg) {
@@ -18,9 +20,23 @@ static inline uint16_t vga_entry(unsigned char uc, uint8_t color) {
 }
 
 /* Get current char value in terminal_buffer at column X and row Y */
-static inline unsigned char vga_read(size_t x, size_t y) {
+static inline unsigned char vga_readchar(size_t x, size_t y) {
     const size_t index = y * VGA_WIDTH + x;
     return terminal_buffer[index] & 0xFF;
+}
+
+static char *vga_readline(size_t y) {
+    memset(line_buffer, 0, VGA_WIDTH);
+    size_t x = 0;
+
+    for (; x < VGA_WIDTH; x++) {
+        if (x > 0 && line_buffer[x - 1] != ' ') {
+            for (size_t i = x; i < VGA_WIDTH; i++){}
+        }
+        line_buffer[x] = vga_readchar(x, y);
+    }
+    line_buffer[x - 1] = '\0';
+    return line_buffer;
 }
 
 void terminal_initialize(void) {
@@ -74,11 +90,11 @@ void terminal_putnewline(void) {
 /* When a backspace implies to decrease a row, align cursor with last caracter */
 void backspace_align(void) {
     for (size_t i = VGA_WIDTH; i > 0; i--) {
-        if (vga_read(terminal_column, terminal_row) != ' ')
+        if (vga_readchar(terminal_column, terminal_row) != ' ')
             break;
         terminal_column--;
     }
-    if (vga_read(terminal_column, terminal_row) != ' ')
+    if (vga_readchar(terminal_column, terminal_row) != ' ')
         terminal_column++; // To not delete last char of previous row
     terminal_column++;
 }
@@ -89,23 +105,60 @@ void handle_backspace(void) {
         terminal_column = VGA_WIDTH;
         backspace_align();
     }
-    if (terminal_column != 0 && terminal_row >= 0) { // cursor can't go outside screen
+    if (terminal_column != 0) { // cursor can't go outside screen
         terminal_column--;
         terminal_putentryat(' ', terminal_color, terminal_column, terminal_row);
     }
 }
 
 void handle_tabulation(void) {
+    if (terminal_column + TAB_SIZE > VGA_WIDTH) {
+        terminal_putnewline();
+        return;
+    }
     for (size_t i = 0; i < TAB_SIZE; i++) {
         terminal_putentryat(' ', terminal_color, terminal_column, terminal_row);
         terminal_column++;
     }
 }
 
+bool is_empty_space(size_t line, size_t start, size_t end) {
+    for (size_t x = start; x < end; x++) {
+        if (vga_readchar(x, line) != ' ')
+            return false;
+    }
+    return true;
+}
+
+void cmd_clear(void) {
+	for (size_t y = 0; y < VGA_HEIGHT; y++) {
+		for (size_t x = 0; x < VGA_WIDTH; x++) {
+			const size_t index = y * VGA_WIDTH + x;
+			terminal_buffer[index] = vga_entry(' ', terminal_color);
+		}
+	}
+    terminal_column = 0;
+    terminal_row = 0;
+}
+
+void search_cmd(void) {
+    if (terminal_row == 0)
+        return;
+    size_t row_index = terminal_row - 1;
+    char *line = vga_readline(row_index);
+    if (!strncmp(line, "shell", 5) && is_empty_space(row_index, 5, VGA_WIDTH))
+        shell_main();
+    if (!strncmp(line, "ls", 2) && is_empty_space(row_index, 2, VGA_WIDTH))
+        printk("no filesystem yet :)\n");
+    if (!strncmp(line, "clear", 5 ) && is_empty_space(row_index, 5, VGA_WIDTH))
+        cmd_clear();
+}
+
 void terminal_putchar(char c) {
     switch (c) {
         case '\n':
             terminal_putnewline();
+            search_cmd();
         break;
         case '\b':
             handle_backspace();
@@ -167,6 +220,14 @@ void terminal_putheader(void) {
 
 #define CURSOR_HIGH_BYTE_CMD    0xE
 #define CURSOR_LOW_BYTE_CMD     0xF
+
+void cursor_left(void) { // TODO: fix this
+    move_cursor(--terminal_column, terminal_row);
+}
+
+void cursor_right(void) { // TODO: fix this
+    move_cursor(++terminal_column, terminal_row);
+}
 
 void move_cursor(size_t x, size_t y) {
     uint16_t pos = (y * VGA_WIDTH) + x;

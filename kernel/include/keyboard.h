@@ -6,6 +6,7 @@ typedef struct {
     bool caps_lock;
     bool ctrl_press;
     bool alt_press;
+    bool special_right;
 } keyboard_state;
 
 void init_keyboard(void);

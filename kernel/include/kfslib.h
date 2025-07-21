@@ -15,4 +15,7 @@ void hexdump(const void *addr, size_t size);
 /* memset.c */
 void*   memset(void *b, size_t c, size_t len);
 
+/* strncmp.c */
+size_t	strncmp(const char *s1, const char *s2, size_t n);
+
 #endif
