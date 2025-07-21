@@ -17,6 +17,11 @@ static inline uint16_t vga_entry(unsigned char uc, uint8_t color) {
 	return (uint16_t) uc | (uint16_t) color << 8;
 }
 
+/* Get current char value in terminal_buffer at column X and row Y */
+static inline unsigned char vga_read(size_t x, size_t y) {
+    const size_t index = y * VGA_WIDTH + x;
+    return terminal_buffer[index] & 0xFF;
+}
 
 void terminal_initialize(void) {
 	terminal_row = 0;
@@ -65,25 +70,39 @@ void terminal_putnewline(void) {
     }
 }
 
-void terminal_putchar(char c) {
-    /* Handle newline */
-    if (c == '\n')
-        terminal_putnewline();
-    else if (c == '\b') {
-        if (terminal_column == 0 && terminal_row != 0) {
-            terminal_row--;
-            terminal_column = VGA_WIDTH; // TODO: count number of spaces
-        }
-        else
-            terminal_column--;
-        terminal_putentryat(' ', terminal_color, terminal_column, terminal_row);
+
+/* When a backspace implies to decrease a row, align cursor with last caracter */
+void backspace_align(void) {
+    for (size_t i = VGA_WIDTH; i > 0; i--) {
+        if (vga_read(terminal_column, terminal_row) != ' ')
+            break;
+        terminal_column--;
     }
-    else {
-        terminal_putentryat(c, terminal_color, terminal_column, terminal_row);
-        if (++terminal_column == VGA_WIDTH) {
-            terminal_column = 0;
+    if (vga_read(terminal_column, terminal_row) != ' ')
+        terminal_column++; // To not delete last char of previous row
+    terminal_column++;
+}
+
+void terminal_putchar(char c) {
+    switch (c) {
+        case '\n':      // Handle newline
             terminal_putnewline();
-        }
+        break;
+        case '\b':      // Handle backspace
+            if (terminal_column == 0 && terminal_row != 0) { // TODO: fix cursor with backspace empty screen
+                terminal_row--;
+                terminal_column = VGA_WIDTH;
+                backspace_align();
+            }
+            terminal_column--;
+            terminal_putentryat(' ', terminal_color, terminal_column, terminal_row);
+            break;
+        default:        // Default character
+            terminal_putentryat(c, terminal_color, terminal_column, terminal_row);
+            if (++terminal_column == VGA_WIDTH) {
+                terminal_column = 0;
+                terminal_putnewline();
+            }
     }
     move_cursor(terminal_column, terminal_row);
 }
