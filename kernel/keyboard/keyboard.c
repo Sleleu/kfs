@@ -131,14 +131,14 @@ void keyboard_handler(struct interrupt_registers *regs) {
             else if (kb_state.caps_lock && press == 0)
                 kb_state.caps_lock = false;
             break;
-        case KEY_LEFT_ARROW:
-            if (kb_state.special_right && press == 0)
-              cursor_left();
-            break;
-        case KEY_RIGHT_ARROW:
-            if (kb_state.special_right && press == 0)
-              cursor_right();
-            break;
+        // case KEY_LEFT_ARROW:
+        //     if (kb_state.special_right && press == 0)
+        //       cursor_left();
+        //     break;
+        // case KEY_RIGHT_ARROW:
+        //     if (kb_state.special_right && press == 0)
+        //       cursor_right();
+        //     break;
         default:
             if (press == 0) {
                 if (kb_state.caps_lock || kb_state.shift_press)

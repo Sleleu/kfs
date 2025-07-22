@@ -36,8 +36,8 @@ void kernel_main(void) {
 	init_keyboard();
 
 	// uncomment to try division by zero
-	//printk("\nTry interrupt:\n");
-	//printk("\nResult: %d", 5 / 0);
+	// printk("\nTry interrupt:\n");
+	// printk("\nResult: %d", 5 / 0);
 
 
 
